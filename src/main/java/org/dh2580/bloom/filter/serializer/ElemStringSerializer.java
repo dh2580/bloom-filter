@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
  * @Author: hao.deng
  * @Date: 2019/7/17-下午5:49
  */
-public class DefaultElementSerializer<T> implements ElementSerializer<T> {
+public class ElemStringSerializer<T> implements ElemSerializer<T> {
 
     public static final Charset UTF8 = Charset.forName("UTF-8");
 

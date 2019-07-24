@@ -6,7 +6,7 @@ package org.dh2580.bloom.filter.serializer;
  * @Author: hao.deng
  * @Date: 2019/7/17-下午5:46
  */
-public interface ElementSerializer<T> {
+public interface ElemSerializer<T> {
 
     /**
      * @param elem 元素

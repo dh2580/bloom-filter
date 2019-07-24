@@ -39,25 +39,5 @@ public interface BloomFilter<T> {
      *
      * @return 返回导出的布隆过滤器内容
      */
-    Data export();
-
-    /**
-     * 布隆存储
-     */
-    class Data {
-        /**
-         * bit map 数据
-         */
-        private long[] bits;
-
-        /**
-         * 最大位下标
-         */
-        private long maxBitIndex;
-
-        /**
-         * hash计算轮数
-         */
-        private int hashCount;
-    }
+    BloomData export();
 }
