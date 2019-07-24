@@ -1,5 +1,7 @@
 package org.dh2580.bloom.filter.hash;
 
+import java.nio.charset.Charset;
+
 /**
  * 参考guava中的Murmur3_32HashFunction实现
  *
@@ -9,25 +11,20 @@ package org.dh2580.bloom.filter.hash;
 public class Murmur3 implements HashFunction {
 
     @Override
-    public int[] hash(String val, int m, int k) {
+    public int[] hash(byte[] bytes, int m, int k) {
         int[] hashes = new int[k];
 
         for (int pos = 0; pos < k; pos++) {
-            int len = val.length();
+            int len = bytes.length;
             int h1 = SEED;
 
             int i = 0;
 
             while (i + 4 <= len) {
-                char c0 = val.charAt(i);
-                char c1 = val.charAt(i + 1);
-                char c2 = val.charAt(i + 2);
-                char c3 = val.charAt(i + 3);
-
-                //只能处理英文字母组合的字符串，暂不支持中文等非英文字母字符
-                if (c0 >= 0x80 || c1 >= 0x80 || c2 >= 0x80 || c3 >= 0x80) {
-                    throw new RuntimeException("val : " + val + " contains non-alphabet chars");
-                }
+                byte c0 = bytes[i];
+                byte c1 = bytes[i + 1];
+                byte c2 = bytes[i + 2];
+                byte c3 = bytes[i + 3];
 
                 int k1 = c0 | (c1 << 8) | (c2 << 16) | (c3 << 24);
 
@@ -40,11 +37,7 @@ public class Murmur3 implements HashFunction {
             int buffer = 0;
             int shift = 0;
             for (; i < len; i++) {
-                char c = val.charAt(i);
-                //只能处理英文字母组合的字符串，暂不支持中文等非英文字母字符
-                if (c >= 0x80) {
-                    throw new RuntimeException("val : " + val + " contains non-alphabet chars");
-                }
+                byte c = bytes[i];
 
                 buffer |= c << shift;
                 shift += 8;
@@ -59,6 +52,14 @@ public class Murmur3 implements HashFunction {
         }
 
         return hashes;
+    }
+
+    @Override
+    public int[] hash(String val, int m, int k) {
+
+        byte[] bytes = val.getBytes(Charset.forName("UTF-8"));
+
+        return hash(bytes, m, k);
     }
 
     @Override

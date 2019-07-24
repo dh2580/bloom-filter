@@ -9,6 +9,14 @@ package org.dh2580.bloom.filter.hash;
 public interface HashFunction {
 
     /**
+     * @param bytes byte类型的参数
+     * @param m     布隆过滤器bits数量
+     * @param k     哈希计算次数
+     * @return 返回计算出的bit index列表
+     */
+    int[] hash(byte[] bytes, int m, int k);
+
+    /**
      * @param val String类型参数
      * @param m   布隆过滤器bits数量
      * @param k   哈希计算次数
