@@ -2,6 +2,7 @@ package org.dh2580.bloom.filter.redis;
 
 import java.util.List;
 
+import org.dh2580.bloom.filter.BloomData;
 import org.dh2580.bloom.filter.BloomFilter;
 import org.dh2580.bloom.filter.config.RedisBloomFilterConfig;
 
@@ -29,7 +30,7 @@ public class RedisBloomFilter<T> implements BloomFilter<T> {
     }
 
     @Override
-    public Data export() {
+    public BloomData export() {
         return null;
     }
 }

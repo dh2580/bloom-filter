@@ -94,11 +94,11 @@ public class LocalBloomFilter<T> implements BloomFilter<T> {
 
     private int[] hashPositions(T elem) {
         if (elem instanceof Integer) {
-            return config.hashFunction().hash((int) elem, config.size(), config.hashCount());
+            return config.hashFunction().hash((Integer) elem, config.size(), config.hashCount());
         }
 
         if (elem instanceof Long) {
-            return config.hashFunction().hash((long) elem, config.size(), config.hashCount());
+            return config.hashFunction().hash((Long) elem, config.size(), config.hashCount());
         }
 
         if (elem instanceof String) {

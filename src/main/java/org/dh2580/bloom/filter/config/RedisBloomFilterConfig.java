@@ -21,4 +21,8 @@ public class RedisBloomFilterConfig<T> extends BloomFilterConfig<T> {
     private int maxTotal = 20;
 
     private int minIdle = 5;
+
+    public RedisBloomFilterConfig(int expectedElems, double falsePositiveProbability) {
+        super(expectedElems, falsePositiveProbability);
+    }
 }

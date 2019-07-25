@@ -2,6 +2,7 @@ package org.dh2580.bloom.filter.redis;
 
 import java.util.List;
 
+import org.dh2580.bloom.filter.BloomData;
 import org.dh2580.bloom.filter.CountBloomFilter;
 import org.dh2580.bloom.filter.config.RedisBloomFilterConfig;
 
@@ -34,7 +35,7 @@ public class RedisCountBloomFilter<T> implements CountBloomFilter<T> {
     }
 
     @Override
-    public Data export() {
+    public BloomData export() {
         return null;
     }
 }
