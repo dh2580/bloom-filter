@@ -22,19 +22,16 @@ public class LocalCountBloomFilter32<T> extends LocalCountBloomFilter<T> {
             throw new NullPointerException("elem is null");
         }
 
-        int[] hashPositions = hashPositions(elem);
+        //如果布隆过滤不包含，则不进行移除操作
+        if (!this.mightContains(elem)) {
+            return false;
+        }
 
-        boolean removed = false;
+        int[] hashPositions = hashPositions(elem);
 
         for (int hashPosition : hashPositions) {
             int longIdx = hashPosition / 64;
             int bitOffset = hashPosition % 64;
-
-            if (!getBit(hashPosition)) {
-                continue;
-            }
-
-            removed = true;
 
             counters32[hashPosition]--;
 
@@ -43,7 +40,7 @@ public class LocalCountBloomFilter32<T> extends LocalCountBloomFilter<T> {
             }
         }
 
-        return removed;
+        return true;
     }
 
     @Override
@@ -54,19 +51,25 @@ public class LocalCountBloomFilter32<T> extends LocalCountBloomFilter<T> {
 
         int[] hashPositions = hashPositions(elem);
 
-        boolean added = false;
+        boolean canAdd = true;
+        for (int hashPosition : hashPositions) {
+            if (counters32[hashPosition] >= Byte.MAX_VALUE) {
+                canAdd = false;
+                break;
+            }
+        }
+        if (!canAdd) {
+            return false;
+        }
 
         for (int hashPosition : hashPositions) {
             int longIdx = hashPosition / 64;
             int bitOffset = hashPosition % 64;
 
-            if (!getBit(hashPosition) || counters32[hashPosition] < Byte.MAX_VALUE) {
-                added = true;
-                longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
-                counters32[hashPosition]++;
-            }
+            longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
+            counters32[hashPosition]++;
         }
 
-        return added;
+        return true;
     }
 }

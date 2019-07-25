@@ -34,19 +34,14 @@ public class LocalBloomFilter<T> implements BloomFilter<T> {
 
         int[] hashPositions = hashPositions(elem);
 
-        boolean added = false;
-
         for (int hashPosition : hashPositions) {
             int longIdx = hashPosition / 64;
             int bitOffset = hashPosition % 64;
 
-            if (!getBit(hashPosition)) {
-                added = true;
-                longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
-            }
+            longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
         }
 
-        return added;
+        return true;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package org.dh2580.bloom.filter.local;
 
-import java.util.List;
-
 import org.dh2580.bloom.filter.config.BloomFilterConfig;
 
 /**
@@ -19,24 +17,21 @@ public class LocalCountBloomFilter8<T> extends LocalCountBloomFilter<T> {
     }
 
     @Override
-    public boolean remove(T elem) {
+    public synchronized boolean remove(T elem) {
         if (elem == null) {
             throw new NullPointerException("elem is null");
         }
 
-        int[] hashPositions = hashPositions(elem);
+        //如果布隆过滤不包含，则不进行移除操作
+        if (!this.mightContains(elem)) {
+            return false;
+        }
 
-        boolean removed = false;
+        int[] hashPositions = hashPositions(elem);
 
         for (int hashPosition : hashPositions) {
             int longIdx = hashPosition / 64;
             int bitOffset = hashPosition % 64;
-
-            if (!getBit(hashPosition)) {
-                continue;
-            }
-
-            removed = true;
 
             counters8[hashPosition]--;
 
@@ -45,30 +40,36 @@ public class LocalCountBloomFilter8<T> extends LocalCountBloomFilter<T> {
             }
         }
 
-        return removed;
+        return true;
     }
 
     @Override
-    public boolean add(T elem) {
+    public synchronized boolean add(T elem) {
         if (elem == null) {
             throw new NullPointerException("elem is null");
         }
 
         int[] hashPositions = hashPositions(elem);
 
-        boolean added = false;
+        boolean canAdd = true;
+        for (int hashPosition : hashPositions) {
+            if (counters8[hashPosition] >= Byte.MAX_VALUE) {
+                canAdd = false;
+                break;
+            }
+        }
+        if (!canAdd) {
+            return false;
+        }
 
         for (int hashPosition : hashPositions) {
             int longIdx = hashPosition / 64;
             int bitOffset = hashPosition % 64;
 
-            if (!getBit(hashPosition) || counters8[hashPosition] < Byte.MAX_VALUE) {
-                added = true;
-                longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
-                counters8[hashPosition]++;
-            }
+            longs[longIdx] = longs[longIdx] | (1L << (63 - bitOffset));
+            counters8[hashPosition]++;
         }
 
-        return added;
+        return true;
     }
 }
