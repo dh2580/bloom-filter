@@ -1,6 +1,6 @@
 package org.dh2580.bloom.filter;
 
-import org.dh2580.bloom.filter.local.MutableBloomFilter;
+import org.dh2580.bloom.filter.local.ImmutableBloomFilter;
 
 /**
  * 布隆存储对象
@@ -14,7 +14,7 @@ public class BloomData {
     }
 
     public static <T> BloomFilter<T> build(BloomData data) {
-        return new MutableBloomFilter<T>(data);
+        return new ImmutableBloomFilter<T>(data);
     }
 
     /**

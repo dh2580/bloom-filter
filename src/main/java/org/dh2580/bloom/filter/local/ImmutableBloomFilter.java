@@ -6,7 +6,7 @@ import org.dh2580.bloom.filter.BloomData;
  * @Author: hao.deng
  * @Date: 2019/7/24-下午7:46
  */
-public class MutableBloomFilter<T> extends LocalBloomFilter<T> {
+public class ImmutableBloomFilter<T> extends LocalBloomFilter<T> {
 
     private long[] longs;
 
@@ -14,7 +14,7 @@ public class MutableBloomFilter<T> extends LocalBloomFilter<T> {
 
     private int hashCount;
 
-    public MutableBloomFilter(BloomData data) {
+    public ImmutableBloomFilter(BloomData data) {
         this.longs = data.getLongs();
         this.maxBitIndex = data.getMaxBitIndex();
         this.hashCount = data.getHashCount();
